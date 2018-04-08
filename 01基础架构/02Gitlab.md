@@ -22,7 +22,7 @@ yum install -y gitlab-ce
 在此完成Gitlab的安装，但此时默认的一些配置还需要调整，比如[邮件配置](https://docs.gitlab.com/ce/administration/reply_by_email.html)，详细的邮件配置，参照官方文档介绍配置即可。
 配置完成后，可以在Gitlab的Admin管理页面看到配置结果：
 
-![邮件配置]($res/2018-04-08_142627.png)
+![邮件配置](img.resource/2018-04-08_142627.png)
 
 在Gitlab协同开发过程中，很多是依赖邮件沟通的，比如Pipelines的执行结果，Issues的处理等等。当然，我们也可以根据提供的Webhook来集成第三方的通信工具，比如钉钉。
 
