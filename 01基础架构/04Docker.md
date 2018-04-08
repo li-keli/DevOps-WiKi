@@ -1,0 +1,42 @@
+04Docker
+===
+	Docker是一个开源的引擎，可以轻松的为任何应用创建一个轻量级的、可移植的、自给自足的容器。开发者在笔记本上编译测试通过的容器可以批量地在生产环境中部署，包括VMs（虚拟机）、bare metal、OpenStack 集群和其他的基础应用平台。 
+
+Docker通常用于如下场景：
+* web应用的自动化打包和发布；
+* 自动化测试和持续集成、发布；
+* 在服务型环境中部署和调整数据库或其他的后台应用；
+* 从头编译或者扩展现有的OpenShift或Cloud Foundry平台来搭建自己的PaaS环境。
+
+Docker文档：
+
+* [官方文档](https://docs.docker.com/)
+* [第三方中文文档](https://doc.yonyoucloud.com/doc/docker_practice/index.html)
+
+在基础架构设计的场景里面，我主要用来做`自动化测试和持续集成、发布`，但生产场景下，一般不是单节点的Docker运行，而是使用集群运行。
+
+现将Docker和Gitlab进行集成，正常的集成是在Runner注册的时候选择Docker作为运行器，不过这里先选择shell，通过shell的方式来了解一下，单个Docker镜像是如何生成的，然后又是如何生成一个容器的。
+
+下面是一个简单的`.gitlab-ci.yml`脚本:
+
+```yml
+deploy_api:
+ stage: deploy
+ tags:
+   - Build
+ script:
+   - dotnet publish Test.Api.csproj -c Release -o ../../publish.api/
+   - docker build -t test/api:v1 . 
+   - docker run -d -P 8001:80 test/api:v1 --name test_api_server
+ only:
+   - master
+```
+这个脚本将发布好的dotnet core 项目打包生成一个docker镜像，然后后台运行这个docker镜像。
+
+使用命令：
+```shell
+docker ps 
+```
+可以看到控制台的输出中就有了名为`test_api_server`的容器正在运行，并且暴露了8001端口。
+
+这里就是一个简单的关联，其实Docker CLI拥有很多很丰富的功能，这需要参考官方文档来自己实践
